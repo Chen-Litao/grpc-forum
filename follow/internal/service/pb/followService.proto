@@ -1,0 +1,27 @@
+syntax="proto3";
+package pb;
+import "followModels.proto";
+option go_package = "/internal/service;service";
+
+message FollowRequest {
+  // @inject_tag: json:"follow_id" form:"follow_id"
+  int64  FollowID = 1;
+  // @inject_tag: json:"user_id" form:"user_id"
+  int64  UserID = 2;
+  // @inject_tag: json:"following_id" form:"following_id"
+  int64  FollowingID = 3;
+  // @inject_tag: json:"followed" form:"follow"
+  int64  Followed = 4;
+}
+
+message FollowDetailResponse{
+  FollowModel UserDetail=1;
+  uint32 Code=2;
+}
+
+
+service FollowService{
+  rpc FollowAction(FollowRequest) returns(FollowDetailResponse);
+  rpc FollowList(FollowRequest) returns(FollowDetailResponse);
+  rpc FollowerList(FollowRequest) returns(FollowDetailResponse);
+}

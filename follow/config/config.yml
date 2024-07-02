@@ -1,8 +1,8 @@
 server:
-  domain: user
+  domain: follow
   version: 1.0
   jwtSecret: 38324
-  grpcAddress: "127.0.0.1:10001"
+  grpcAddress: "127.0.0.1:10003"
 
 mysql:
   driverName: mysql
@@ -19,3 +19,11 @@ etcd:
 redis:
   address: 10.151.1.122:6379
   password:
+
+
+rabbitmq:
+  rabbitMQ: amqp
+  rabbitMQUser: guest
+  rabbitMQPassWord: guest
+  rabbitMQHost: 10.151.1.122
+  rabbitMQPort: 5672
