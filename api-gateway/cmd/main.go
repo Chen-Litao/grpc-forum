@@ -40,7 +40,7 @@ func startListen() {
 	// 服务名
 	userServiceName := viper.GetString("domain.user")
 	taskServiceName := viper.GetString("domain.task")
-
+	followServiceName := viper.GetString("domain.follow")
 	// RPC 连接
 	connUser, err := RPCConnect(ctx, userServiceName, etcdRegister)
 	if err != nil {
@@ -54,11 +54,16 @@ func startListen() {
 	}
 	taskService := service.NewTaskServiceClient(connTask)
 
+	connFollow, err := RPCConnect(ctx, followServiceName, etcdRegister)
+	if err != nil {
+		return
+	}
+	followService := service.NewFollowServiceClient(connFollow)
 	// 加入熔断 TODO main太臃肿了
 	wrapper.NewServiceWrapper(userServiceName)
 	wrapper.NewServiceWrapper(taskServiceName)
-	
-	ginRouter := routes.NewRouter(userService, taskService)
+	wrapper.NewServiceWrapper(followServiceName)
+	ginRouter := routes.NewRouter(userService, taskService, followService)
 	server := &http.Server{
 		Addr:           viper.GetString("server.port"),
 		Handler:        ginRouter,

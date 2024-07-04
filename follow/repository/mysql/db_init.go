@@ -1,6 +1,7 @@
-package repository
+package mysql
 
 import (
+	"context"
 	"fmt"
 	"follow/pkg/util"
 	"github.com/gin-gonic/gin"
@@ -9,11 +10,12 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"os"
 	"strings"
 	"time"
 )
 
-var DB *gorm.DB
+var _db *gorm.DB
 
 func InitDB() {
 	host := viper.GetString("mysql.host")
@@ -58,7 +60,19 @@ func Database(connString string) error {
 	sqlDB.SetMaxIdleConns(20)  //设置连接池，空闲
 	sqlDB.SetMaxOpenConns(100) //打开
 	sqlDB.SetConnMaxLifetime(time.Second * 30)
-	DB = db
-	migration()
+	_db = db
+	err = _db.Set("gorm:table_options", "charset=utf8mb4").
+		AutoMigrate(
+			&Follow{},
+		)
+	if err != nil {
+		util.LogrusObj.Infoln("create follow table fail")
+		os.Exit(0)
+	}
+	util.LogrusObj.Infoln("create follow table success")
 	return err
+}
+func NewDBClient(ctx context.Context) *gorm.DB {
+	db := _db
+	return db.WithContext(ctx)
 }

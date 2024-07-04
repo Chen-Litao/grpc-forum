@@ -6,8 +6,10 @@ import (
 	"follow/discovery"
 	"follow/internal/handler"
 	"follow/internal/service"
+	"follow/repository/cache"
+	"follow/repository/mq"
+	"follow/repository/mysql"
 
-	"follow/repository"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
@@ -16,7 +18,10 @@ import (
 
 func main() {
 	config.InitConfig()
-	repository.InitDB()
+	mysql.InitDB()
+	cache.InitRedis()
+	mq.InitRabbitMQ()
+	mq.InitFollowRabbitMQ()
 	// etcd 地址
 	etcdAddress := []string{viper.GetString("etcd.address")}
 	// 服务注册

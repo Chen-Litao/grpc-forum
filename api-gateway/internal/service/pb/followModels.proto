@@ -1,0 +1,14 @@
+syntax="proto3";
+package pb;
+option go_package = "/internal/service;service";
+
+message FollowModel {
+  // @inject_tag: json:"follow_id"
+  int64  FollowID = 1;
+  // @inject_tag: json:"user_id"
+  int64  UserID = 2;
+  // @inject_tag: json:"following_id"
+  int64  FollowingID = 3;
+  // @inject_tag: json:"followed"
+  int64  Followed = 4;
+}

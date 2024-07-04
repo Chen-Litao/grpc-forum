@@ -12,6 +12,7 @@ func InitMiddleware(service []interface{}) gin.HandlerFunc {
 		context.Keys = make(map[string]interface{})
 		context.Keys["user"] = service[0]
 		context.Keys["task"] = service[1]
+		context.Keys["follow"] = service[2]
 		context.Next()
 	}
 }
@@ -20,10 +21,10 @@ func InitMiddleware(service []interface{}) gin.HandlerFunc {
 func ErrorMiddleware() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		defer func() {
-			if r := recover();r!=nil{
-				context.JSON(200,gin.H{
-					"code":404,
-					"msg":fmt.Sprintf("%s",r),
+			if r := recover(); r != nil {
+				context.JSON(200, gin.H{
+					"code": 404,
+					"msg":  fmt.Sprintf("%s", r),
 				})
 				context.Abort()
 			}
